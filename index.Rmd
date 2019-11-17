@@ -1,0 +1,94 @@
+---
+author: "未命名 B01201001 一般系"
+title: "HW 11: Web API、JSON、`httr`"
+date: |
+  | 2019-11-21
+  |
+  | [Rmd Source (for TAs)](./index.Rmd){download='`r basename(getwd())`.Rmd'}
+output:
+  html_document:
+    number_sections: yes
+    highlight: tango
+    toc: yes
+    toc_float:
+      collapsed: no
+    css: style.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = '#>', error=TRUE, results = 'hold', out.width='70%', fig.align = 'center', message = FALSE)
+```
+
+
+Dcard API (共 80 分)
+==============================
+
+請參考 <https://levirve.github.io/blog/2016/Dccard-crawler/> 的「網站 API 規則」段落，並觀察 [Dcard API 頁面](https://dcard.tw/_api/) 以及 [Dcard 官方頁面](https://www.dcard.tw/)，了解你可以透過 Dcard API 取得什麼樣的資料。
+
+下方程式碼可從 `https://dcard.tw/_api/forums/makeup/posts` 取得 [Dcard 美妝板](https://www.dcard.tw/f/makeup) 的文章資訊
+
+```{r}
+library(httr)
+req <- GET('https://www.dcard.tw/', 
+           path = c("_api", "forums", "makeup", "posts"))
+
+req[["status_code"]]
+makeup_idx <- content(req)
+```
+
+
+1. (30 分)  
+請觀察 `https://dcard.tw/_api/forums/makeup/posts` 當中的內容，以取出儲存於 `makeup_idx` 中，**第一篇**文章的 `id` (character vector of length 1)。
+
+    ```{r}
+    # Your code goes here
+    
+    
+    # 因為文章隨時會更新，所以結果不會一樣
+    # Should print out something like:
+    #> [1] 232518734
+    ```
+
+
+2. (50 分)  
+請透過上一題取出的 `id`，再向 Dcard API 發出 request，取得該篇文章的內文 (`content`)。  
+(hint: 這題需向不同的 URL 請求資料，請參考上方的網頁以找出適宜的 URL)
+
+    ```{r}
+    # Your code goes here
+    
+    
+    # Should print out something like:
+    #> [1] "對於愛看棒球的我，雖然無法到現場加油但心要同在～\n我愛韓國輸啦！！！\n趁著棒球魂上身來分享一下棒球加油妝\n \nBTW啦啦隊氣氛整個超嗨\n每個選手上場必唱特定應援曲+動作\n超想衝去前面跟啦啦隊一起跳-///-\n \n妝容如下\nhttps://i.imgur.com/IrH709F.jpg\nhttps://i.imgur.com/NGJ0vnV.jpg\n自備加油棒超有看棒球的感覺（握\n \n特別分享我最近好愛的紅唇GA唇萃#400💋💋💋\n是亞曼尼正紅，充滿活力又年輕的正紅色\n真的超美超級飽和的\n拿來畫紅唇和Logo(?!)完美❤❤❤\nhttps://i.imgur.com/pGu8Mgy.jpg\nhttps://i.imgur.com/oM0HlkN.jpg\n日常妝也可以駕馭的好看紅唇💋\n小女子口紅不嫌多啊❤\n簡單棒球加油妝分享到這邊\n雖然中華隊還是輸了\n不過你們超棒！！！以你們為榮\n \n有沒有人最近也燃燒棒球魂的～～"
+    ```
+
+
+
+從 Dcard API 撈資料 (共 40 分)
+==============================
+
+在知道怎麼從 `https://dcard.tw/_api/forums/makeup/posts` 取得文章 id，並透過此 id 取得文章內文後，就應該知道怎麼從 Dcard 收集語料了～
+
+你的任務是透過 Web API，從 [美妝板](https://www.dcard.tw/f/makeup) 以及 [新生板](https://www.dcard.tw/f/freshman) 各抓出 3 篇文章 (順序隨便，可以隨機也可抓出前 3 個)，並將結果整理成一份 data frame。這份 data frame 中必須具有下列變項：
+
+- `id`: 文章 id
+- `forum`: 文章看板 (`makeup` 或 `freshman`)
+- `gender`: 作者性別
+- `title`: 文章標題
+- `content`: 文章內文
+
+```{r}
+# Your code goes here
+
+
+# Should print out something like:
+#>          id    forum gender              title                  content
+#> 1 232519207   makeup      F             皮膚細...    每次上網看人家形容...
+#> 2 232518995   makeup      F       終於考完期中...      對於愛看棒球的我...
+#> 3 232518833   makeup      F        分享 韓國輸...    這篇跟上一篇的溫柔...
+#> 4 232517835 freshman      F   急！《彩      式...    大家好～\n因為比賽...
+#> 5 232516213 freshman      M    成大是ㄅ是都4廢...       如T\n開戰阿\n窩...
+#> 6 232515512 freshman      M     我要想過泓光跟...      除了分數比較差異...
+```
+
+
