@@ -1,4 +1,4 @@
-# HW 11: 擷取網路資料: Web API、JSON、`httr`
+# HW 11: 擷取網路資料 (Web API、JSON、`httr`)
 
 ## 領取作業
 
